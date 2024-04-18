@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Gym</string>
+    <string name="title_home">Home</string>
+    <string name="title_history">History</string>
+    <string name="title_progress">Progress</string>
+    <string name="title_session">Session</string>
+</resources>

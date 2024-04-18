@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">@color/brand_500</color>
+    <color name="colorPrimaryDisabled">#0B9E64</color>
+    <color name="colorSecondary">@color/brand_300</color>
+    <color name="colorBackground">@color/white</color>
+    <color name="colorSuccess">#2BCC92</color>
+    <color name="colorSuccess100">#E5F8F2</color>
+    <color name="colorError">#FF0000</color>
+    <color name="colorError100">#FFE5E5</color>
+    <color name="colorError10">#1AF54336</color>
+    <color name="colorWarning">#F8C749</color>
+    <color name="colorWarning100">#FCEEC8</color>
+    <color name="colorBorder">#E5E8EB</color>
+
+    <color name="brand_green">#03A66D</color>
+    <color name="brand_green_dark">#109062</color>
+    <color name="brand_500">#0C64F5</color>
+    <color name="brand_300">#48937E</color>
+    <color name="brand_200">#D4E1F5</color>
+    <color name="brand_100">#E9F0FA</color>
+    <color name="brand_50">#F1F6FC</color>
+
+    <color name="mono_900">#0F0F0F</color>
+    <color name="mono_800">#363636</color>
+    <color name="mono_600">#99002033</color>
+    <color name="mono_500">#A2A2A2</color>
+    <color name="mono_400">#C9C9C9</color>
+    <color name="mono_300">#DDDDDD</color>
+    <color name="mono_200">#E7E7E7</color>
+    <color name="mono_100">#F1F1F1</color>
+    <color name="mono_50">#F4F4F6</color>
+    <color name="mono_1">#F9F9FB</color>
+
+    <color name="text_1">#99002033</color>
+    <color name="background">#F7F9FC</color>
+
+    <color name="transparent">#00000000</color>
+
+    <color name="colorSecondary_transparent15">#232A69CE</color>
+    <color name="mono_900_transparent160">#A00F0F0F</color>
+
+    <color name="my_balance">#F9CCCB</color>
+    <color name="my_limit">#E8F2D9</color>
+    <color name="my_total">#CAF2F1</color>
+    <color name="my_withdrawal">#DAE4DC</color>
+    <color name="bitlime_background">#2A71FF</color>
+    <color name="sub_background">#272727</color>
+    <color name="autobitlime">#990000</color>
+    <color name="lime10">#FF6600</color>
+
+    <color name="cell_background_color">#ffffff</color>
+    <color name="header_line_color">#0a0a0a</color>
+    <color name="table_view_default_text_color">#0a0a0a</color>
+    <color name="cell_background_odd_color">#F4F6F9</color>
+    <color name="typo_secondary">#99002033</color>
+
+    <color name="color_bitlime">#2a71ff</color>
+    <color name="color_auto_standard">#990100</color>
+    <color name="color_auto_business">#bb9ab7</color>
+    <color name="color_auto_premium">#e48826</color>
+    <color name="color_lime10">#ff6600</color>
+    <color name="color_lime">#46d96e</color>
+    <color name="color_kaleidoscope">#24CAFF</color>
+    <color name="color_mini_lime">#CBE681</color>
+    <color name="color_travel">#37CBCB</color>
+
+    <color name="color_bitlime_background">#802a71ff</color>
+    <color name="color_auto_standard_background">#66990100</color>
+    <color name="color_auto_business_background">#99bb9ab7</color>
+    <color name="color_auto_premium_background">#5ee48826</color>
+    <color name="color_lime10_background">#66ff6600</color>
+    <color name="color_lime_background">#9946d96e</color>
+    <color name="color_kaleidoscope_background">#8024CAFF</color>
+    <color name="color_mini_lime_background">#a8cb47</color>
+    <color name="color_travel_background">#C3EFEF</color>
+
+    <color name="color_ripple_green">#1410905D</color>
+
+    <color name="grad_1">#FFBD9D</color>
+    <color name="grad_2">#FF9899</color>
+    <color name="grad_3">#DDFF9C</color>
+    <color name="grad_4">#5BFDAD</color>
+    <color name="grad_5">#9BE7FF</color>
+    <color name="dialog_item_background">#0C000000</color>
+
+    <color name="grad_01">#5D50EF</color>
+    <color name="grad_02">#F293D8</color>
+    <color name="grad_03">#FFFFFF</color>
+</resources>
