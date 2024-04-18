@@ -33,6 +33,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -58,6 +61,7 @@ fun SetBlock(
     var valueReps by remember {
         mutableStateOf(set.actualReps?.toString())
     }
+    val repsFocus = FocusRequester()
     val keyboardController = LocalSoftwareKeyboardController.current
     Surface(
         shape = RoundedCornerShape(16.dp),
@@ -98,7 +102,12 @@ fun SetBlock(
                     OutlinedTextField(
                         modifier = Modifier
                             .width(64.dp)
-                            .height(48.dp),
+                            .height(48.dp)
+                            .onFocusChanged {
+                                if (valueWeight != null && !it.hasFocus) {
+                                    onModify(set.copy(actualWeight = valueWeight?.toDouble()))
+                                }
+                            },
                         value = valueWeight ?: "",
                         onValueChange = {
                             valueWeight = it
@@ -117,13 +126,13 @@ fun SetBlock(
                             errorBorderColor = GymTheme.colors.error,
                         ),
                         keyboardActions = KeyboardActions(
-                            onDone = {
-                                onModify(set.copy(actualReps = valueWeight?.toDouble()))
-                                keyboardController?.hide()
+                            onNext = {
+                                onModify(set.copy(actualWeight = valueWeight?.toDouble()))
+                                repsFocus.requestFocus()
                             }
                         ),
                         keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
+                            imeAction = ImeAction.Next,
                             keyboardType = KeyboardType.Decimal
                         ),
                         textStyle = GymTheme.typography.bodyMedium.copy(
@@ -151,7 +160,13 @@ fun SetBlock(
                     OutlinedTextField(
                         modifier = Modifier
                             .width(64.dp)
-                            .height(48.dp),
+                            .height(48.dp)
+                            .focusRequester(repsFocus)
+                            .onFocusChanged {
+                                if (valueReps != null && !it.hasFocus) {
+                                    onModify(set.copy(actualReps = valueReps?.toDouble()))
+                                }
+                            },
                         value = valueReps ?: "",
                         onValueChange = {
                             valueReps = it

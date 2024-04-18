@@ -11,3 +11,5 @@ data class Set(
         const val DEFAULT_TIMER = 180000L
     }
 }
+
+data class SuggestedSet(val weight: Double, val reps: Int)

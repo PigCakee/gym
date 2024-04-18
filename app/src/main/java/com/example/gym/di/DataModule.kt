@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.gym.room.GymDatabase
 import com.example.gym.room.dao.ExercisesDao
 import com.example.gym.datastore.DataStoreManager
+import com.example.gym.room.dao.SessionsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +37,9 @@ object DataModule {
     fun provideDatabase(context: Context): GymDatabase = GymDatabase.getInstance(context)
 
     @Provides
-    fun provideUserDao(context: Context): ExercisesDao = GymDatabase.getInstance(context).exercisesDao()
+    fun provideExercisesDao(context: Context): ExercisesDao = GymDatabase.getInstance(context).exercisesDao()
+
+    @Provides
+    fun provideSessionsDao(context: Context): SessionsDao = GymDatabase.getInstance(context).sessionsDao()
 
 }

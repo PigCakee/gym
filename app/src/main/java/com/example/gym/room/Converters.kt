@@ -2,6 +2,8 @@ package com.example.gym.room
 
 import androidx.room.TypeConverter
 import com.example.gym.data.Exercise
+import com.example.gym.data.ExerciseWithSets
+import com.example.gym.data.Set
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -41,6 +43,28 @@ class Converters {
     @TypeConverter
     fun fromExercises(exercises: List<Exercise>): String {
         return Gson().toJson(exercises)
+    }
+
+    @TypeConverter
+    fun fromSets(sets: List<Set>): String {
+        return Gson().toJson(sets)
+    }
+
+    @TypeConverter
+    fun toSets(value: String?): List<Set> {
+        val listType: Type = object : TypeToken<List<Set>>() {}.type
+        return Gson().fromJson(value, listType)
+    }
+
+    @TypeConverter
+    fun fromEWS(sets: List<ExerciseWithSets>): String {
+        return Gson().toJson(sets)
+    }
+
+    @TypeConverter
+    fun toEWS(value: String?): List<ExerciseWithSets> {
+        val listType: Type = object : TypeToken<List<ExerciseWithSets>>() {}.type
+        return Gson().fromJson(value, listType)
     }
 }
 

@@ -14,6 +14,7 @@ sealed interface NewSessionIntent : MviIntent {
     data class StartSetTimer(val exercise: ExerciseUi, val set: Set, val index: Int) : NewSessionIntent
     data class ModifySet(val exercise: ExerciseUi, val set: Set, val index: Int) : NewSessionIntent
     data class OnQueryChanged(val query: String) : NewSessionIntent
+    data object FinishSession : NewSessionIntent
 }
 
 data class NewSessionState(

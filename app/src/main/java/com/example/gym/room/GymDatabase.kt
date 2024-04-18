@@ -6,17 +6,18 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.gym.data.Exercise
+import com.example.gym.data.Session
 import com.example.gym.room.dao.ExercisesDao
 import com.example.gym.room.dao.SessionsDao
 
 @Database(
     entities = [
-        Exercise::class
+        Exercise::class,
+        Session::class
     ],
     version = 1,
     exportSchema = true,
-    autoMigrations = [
-    ]
+    autoMigrations = []
 )
 @TypeConverters(Converters::class)
 abstract class GymDatabase : RoomDatabase() {

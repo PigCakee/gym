@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -30,6 +31,29 @@ fun GymPlus(
         Box(modifier = modifier) {
             Icon(
                 imageVector = Icons.Default.Add,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(32.dp)
+                    .align(Alignment.Center),
+            )
+        }
+    }
+}
+
+@Composable
+fun GymFinish(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        border = BorderStroke(1.dp, Mono600),
+        shape = CircleShape,
+        color = Success,
+        modifier = Modifier.clickable { onClick() }
+    ) {
+        Box(modifier = modifier) {
+            Icon(
+                imageVector = Icons.Default.Done,
                 contentDescription = null,
                 modifier = Modifier
                     .size(32.dp)
