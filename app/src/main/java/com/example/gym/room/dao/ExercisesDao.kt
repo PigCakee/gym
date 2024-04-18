@@ -18,8 +18,14 @@ interface ExercisesDao {
     @Query("SELECT * FROM exercises")
     suspend fun getAllExercises(): List<Exercise>
 
+    @Query("SELECT * FROM exercises WHERE recentlyAdded==:recent")
+    suspend fun getRecentExercises(recent: Boolean = true): List<Exercise>
+
     @Query("SELECT * FROM exercises WHERE name LIKE '%' || :name || '%'")
     suspend fun getExercisesWithName(name: String): List<Exercise>
+
+    @Query("SELECT * FROM exercises WHERE id==:id")
+    suspend fun getExercisesById(id: String): Exercise
 
     // You can add more queries as needed
 }

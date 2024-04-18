@@ -1,11 +1,13 @@
 package com.example.gym.mvi
 
+import com.example.gym.notification.NotificationManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CommonMiddleware @Inject constructor(
+    private val notificationManager: NotificationManager
 ): Middleware<MviState> {
 
     override fun execute(
@@ -26,6 +28,10 @@ class CommonMiddleware @Inject constructor(
                 }
 
                 is CommonIntent.ShareCode -> {
+                }
+
+                is CommonIntent.SendNotification -> {
+                    notificationManager.sendNotification("Time's up", "Rest time is over. Start a new set")
                 }
             }
         }

@@ -1,19 +1,24 @@
 package com.example.gym.new_session
 
+import android.os.CountDownTimer
 import com.example.gym.components.ExerciseUi
 import com.example.gym.data.Exercise
 import com.example.gym.data.ExerciseWithSets
 import com.example.gym.data.Session
 import com.example.gym.data.Set
 import com.example.gym.data.SuggestedSet
+import com.example.gym.mvi.CommonIntent
 import com.example.gym.mvi.Middleware
 import com.example.gym.mvi.MviIntent
 import com.example.gym.nav.Back
 import com.example.gym.nav.NavigationManager
+import com.example.gym.nav.ShowMessage
 import com.example.gym.room.dao.ExercisesDao
 import com.example.gym.room.dao.SessionsDao
+import com.example.gym.util.debugLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -26,6 +31,8 @@ class NewSessionMiddleware @Inject constructor(
     private val sessionsDao: SessionsDao,
     private val navigationManager: NavigationManager
 ) : Middleware<NewSessionState> {
+
+    var queryJob: Job? = null
 
     override fun execute(
         intent: MviIntent,
@@ -41,9 +48,13 @@ class NewSessionMiddleware @Inject constructor(
                             outputIntents.emit(
                                 NewSessionIntent.Init(
                                     state.copy(
-                                        availableExercises = exercisesDao.getAllExercises().map {
-                                            it.mapToUi()
-                                        }
+                                        availableExercises = exercisesDao.getRecentExercises()
+                                            .ifEmpty {
+                                                exercisesDao.getAllExercises()
+                                            }
+                                            .map {
+                                                it.mapToUi()
+                                            }
                                     )
                                 )
                             )
@@ -53,38 +64,56 @@ class NewSessionMiddleware @Inject constructor(
 
                 is NewSessionIntent.AddExercise -> {
                     coroutineScope.launch(Dispatchers.IO) {
-                        exercisesDao.getAllExercises().find { it.id == intent.exercise.id }?.let {
-                            addExercise(it, outputIntents)
-                        }
+                        val exercise = exercisesDao.getExercisesById(intent.exercise.id)
+                        addExercise(exercise, outputIntents)
                     }
                 }
 
                 is NewSessionIntent.OnQueryChanged -> {
-                    coroutineScope.launch(Dispatchers.IO) {
+                    queryJob?.cancel()
+                    queryJob = coroutineScope.launch(Dispatchers.IO) {
                         outputIntents.emit(
                             NewSessionIntent.LoadExercises(
-                                exercises = exercisesDao.getExercisesWithName(intent.query).map {
-                                    it.mapToUi()
-                                }
+                                exercises = (
+                                    if (intent.query.isNotBlank()) {
+                                        exercisesDao.getExercisesWithName(intent.query)
+                                    } else {
+                                        exercisesDao.getRecentExercises()
+                                    }
+                                ).map { it.mapToUi() }
                             )
                         )
                     }
                 }
 
                 is NewSessionIntent.StartSetTimer -> {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        while (intent.set.restTimer > 0L) {
-                            outputIntents.emit(
-                                NewSessionIntent.ModifySet(
-                                    exercise = intent.exercise,
-                                    set = intent.set.copy(restTimer = intent.set.restTimer - 1000L),
-                                    index = intent.index
+                    val newSet = intent.set.copy(restTimer = intent.set.restTimer)
+                    object : CountDownTimer(newSet.restTimer, 1000L) {
+                        override fun onTick(millisUntilFinished: Long) {
+                            coroutineScope.launch {
+                                outputIntents.emit(
+                                    NewSessionIntent.ModifySet(
+                                        exercise = intent.exercise,
+                                        set = newSet.copy(restTimer = millisUntilFinished),
+                                        index = intent.index
+                                    )
                                 )
-                            )
-                            delay(1000L)
+                            }
                         }
-                    }
-                    // TODO send notification
+
+                        override fun onFinish() {
+                            coroutineScope.launch {
+                                outputIntents.emit(
+                                    NewSessionIntent.ModifySet(
+                                        exercise = intent.exercise,
+                                        set = newSet.copy(restTimer = 0L),
+                                        index = intent.index
+                                    )
+                                )
+                                outputIntents.emit(CommonIntent.SendNotification)
+                            }
+                        }
+                    }.start()
                 }
 
                 is NewSessionIntent.FinishSession -> {
@@ -105,6 +134,7 @@ class NewSessionMiddleware @Inject constructor(
         exercise: Exercise,
         outputIntents: MutableSharedFlow<MviIntent>
     ) {
+        exercisesDao.insertExercise(exercise.copy(recentlyAdded = true))
         outputIntents.emit(
             NewSessionIntent.ExerciseAdded(
                 ExerciseWithSets(
@@ -161,10 +191,30 @@ class NewSessionMiddleware @Inject constructor(
         return List(3) { index ->
             val suggestedReps =
                 if (averageReps.last() >= 8) averageReps[index].toInt() else averageReps[index].toInt() + 1
-            SuggestedSet(increasedAverageWeight, suggestedReps)
+            SuggestedSet(roundToNearestValidValue(increasedAverageWeight), suggestedReps)
         }.map {
             it.copy(weight = "%.3f".format(it.weight).toDouble())
         }
+    }
+
+    private fun roundToNearestValidValue(number: Double): Double {
+        val multipliedNumber = number * 1000
+        val roundedInteger = (multipliedNumber + 0.5).toInt()  // Adding 0.5 for correct rounding
+        val integerPart = roundedInteger / 1000
+        val decimalPart = roundedInteger % 1000
+
+        val adjustedDecimalPart = when {
+            decimalPart <= 0 || decimalPart > 825 -> 0
+            decimalPart <= 125 -> 125
+            decimalPart <= 250 -> 250
+            decimalPart <= 375 -> 375
+            decimalPart <= 500 -> 500
+            decimalPart <= 625 -> 625
+            decimalPart <= 750 -> 750
+            else -> 825
+        }
+
+        return (integerPart * 1000 + adjustedDecimalPart) / 1000.0
     }
 
     private fun calculateNextReps(reps: List<Double>): Double {

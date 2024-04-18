@@ -17,9 +17,10 @@ data class Exercise(
     @SerializedName("instructions") val instructions: List<String>,
     @SerializedName("category") val category: String,
     @SerializedName("images") val images: List<String>,
+    @SerializedName("recentlyAdded") val recentlyAdded: Boolean = false,
     @PrimaryKey(autoGenerate = false) @SerializedName("id") val id: String
 ) {
-    fun mapToUi() = ExerciseUi(id = id, imageUrl = "", name = name, primaryMuscles = primaryMuscles, secondaryMuscles = secondaryMuscles)
+    fun mapToUi() = ExerciseUi(id = id, imageUrl = images.firstOrNull() ?: "", name = name, primaryMuscles = primaryMuscles, secondaryMuscles = secondaryMuscles)
 }
 
 data class ExerciseList(

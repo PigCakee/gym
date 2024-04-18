@@ -17,6 +17,8 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,6 +30,7 @@ import com.example.gym.ui.theme.White
 @Composable
 fun ExercisePickerBottomSheet(
     query: String,
+    focusRequester: FocusRequester,
     exercises: List<ExerciseUi>,
     sheetState: SheetState,
     onClose: () -> Unit,
@@ -56,7 +59,8 @@ fun ExercisePickerBottomSheet(
         GymTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .focusRequester(focusRequester),
             value = query,
             hint = "Enter name",
             keyboardActions = KeyboardActions(),
